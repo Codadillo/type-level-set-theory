@@ -28,16 +28,39 @@ pub mod set {
         set!(set!(set!(),), set!(),)
     );
 
+    // Test ordered equality
+    type_assert!(oeq_null, True, OrdEq<set!(), set!()>);
+    type_assert!(noeq_null, False, OrdEq<set!(), set!(set!(), )>);
+    type_assert!(oeq_nested, True, OrdEq<set!(set!(set!(), set!(), ), set!(set!(), ), ), set!(set!(set!(), set!(), ), set!(set!(), ), )>);
+    type_assert!(noeq_nested, False, OrdEq<set!(set!(set!(), set!(), ), set!(set!(), ), ), set!(set!(set!(), ), set!(set!(), ), )>);
+
+    // Test ordered element containment
+    type_assert!(oin_null, False, OrdIn<set!(), set!()>);
+    type_assert!(set_oin_null, False, OrdIn<set!(set!(), ), set!()>);
+    type_assert!(null_oin_set, True, OrdIn<set!(), set!(set!(), )>);
+    type_assert!(oin_nested, True, OrdIn<set!(set!(), ), set!(set!(set!(), ), set!(set!(set!(), ), ), )>);
+    type_assert!(noin_nested, False, OrdIn<set!(set!(), ), set!(set!(), set!(set!(set!(), ), ), )>);
+
+    // Test element containment
+    type_assert!(in_null, False, OrdIn<set!(), set!()>);
+    type_assert!(set_in_null, False, OrdIn<set!(set!(), ), set!()>);
+    type_assert!(null_in_set, True, OrdIn<set!(), set!(set!(), )>);
+    type_assert!(in_nested, True, OrdIn<set!(set!(), ), set!(set!(set!(), ), set!(set!(set!(), ), ), )>);
+    type_assert!(nin_nested, False, OrdIn<set!(set!(), ), set!(set!(), set!(set!(set!(), ), ), )>);
+
+    // Test set containment
+    type_assert!(sub_null, True, Subset<set!(), set!()>);
+    type_assert!(sub_basic, True, Subset<set!(set!(), ), set!(set!(), set!(set!(), ), )>);
+    type_assert!(sup_basic, False, Subset<set!(set!(), set!(set!(), ), ), set!(set!(), )>);
+    type_assert!(sub_nested, True, Subset<set!(set!(), set!(set!(), set!(), ), set!(), set!(set!(), set!(set!(), ), ), ), 
+        set!(set!(set!(), set!(), ), set!(set!(), set!(set!(set!(), ), ), ), set!(set!(), ), set!(), set!(set!(), set!(set!(), ), ), )>);
+
     // Test equality
     type_assert!(eq_null, True, Eq<set!(), set!()>);
-    type_assert!(neq_null, False, Eq<set!(), set!(set!(), )>);
-    type_assert!(eq_nested, True, Eq<set!(set!(set!(), set!(), ), set!(set!(), ), ), set!(set!(set!(), set!(), ), set!(set!(), ), )>);
-    type_assert!(neq_nested, False, Eq<set!(set!(set!(), set!(), ), set!(set!(), ), ), set!(set!(set!(), ), set!(set!(), ), )>);
+    type_assert!(eq_nested, True, Eq<set!(set!(), set!(set!(), set!(set!(), ), ), ), set!(set!(set!(), set!(set!(), ), ), set!(), )>);
 
-    // Test containment
-    type_assert!(in_null, False, Contains<set!(), set!()>);
-    type_assert!(set_in_null, False, Contains<set!(), set!(set!(), )>);
-    type_assert!(null_in_set, True, Contains<set!(set!(), ), set!()>);
-    type_assert!(in_nested, True, Contains<set!(set!(set!(), ), set!(set!(set!(), ), ), ), set!(set!(), )>);
-    type_assert!(nin_nested, False, Contains<set!(set!(), set!(set!(set!(), ), ), ), set!(set!(), )>);
+    // Test simplification
+    type_assert!(simp_null, Null, Simplify<set!()>);
+    type_assert!(no_simp, set!(set!(),), Simplify<set!(set!(),)>);
+    type_assert!(simp_2, set!(set!(),), Simplify<set!(set!(), set!(),)>);
 }

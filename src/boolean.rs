@@ -49,3 +49,17 @@ impl DAnd<False> for True {
 impl DAnd<False> for False {
     type Output = False;
 }
+
+pub type IfThenElse<B, T, K> = <B as DIfThenElse<T, K>>::Output;
+
+pub trait DIfThenElse<T, K>: Bool {
+    type Output;
+}
+
+impl<T, K> DIfThenElse<T, K> for True {
+    type Output = T;
+}
+
+impl<T, K> DIfThenElse<T, K> for False {
+    type Output = K;
+}
