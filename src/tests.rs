@@ -49,11 +49,11 @@ pub mod set {
     type_assert!(noin_nested, False, OrdIn<set!(set!(), ), set!(set!(), set!(set!(set!(), ), ), )>);
 
     // Test element containment
-    type_assert!(in_null, False, OrdIn<set!(), set!()>);
-    type_assert!(set_in_null, False, OrdIn<set!(set!(), ), set!()>);
-    type_assert!(null_in_set, True, OrdIn<set!(), set!(set!(), )>);
-    type_assert!(in_nested, True, OrdIn<set!(set!(), ), set!(set!(set!(), ), set!(set!(set!(), ), ), )>);
-    type_assert!(nin_nested, False, OrdIn<set!(set!(), ), set!(set!(), set!(set!(set!(), ), ), )>);
+    type_assert!(in_null, False, In<set!(), set!()>);
+    type_assert!(set_in_null, False, In<set!(set!(), ), set!()>);
+    type_assert!(null_in_set, True, In<set!(), set!(set!(), )>);
+    type_assert!(in_nested, True, In<set!(set!(), ), set!(set!(set!(), ), set!(set!(set!(), ), ), )>);
+    type_assert!(nin_nested, False, In<set!(set!(), ), set!(set!(), set!(set!(set!(), ), ), )>);
 
     // Test set containment
     type_assert!(sub_null, True, Subset<set!(), set!()>);
@@ -87,6 +87,23 @@ pub mod set {
         Union<
             set!(set!(), set!(set!(), ), ),
             set!(set!(set!(set!(), ), ), set!(), set!(), )
+        >
+    );
+
+    // Test intersection
+    set_assert_eq!(sect_null, set!(), Intersection<set!(), set!(set!(), )>);
+    set_assert_eq!(sect_eq,
+        set!(set!(), set!(set!(), ), ),
+        Intersection<
+            set!(set!(), set!(set!(), ), ),
+            set!(set!(), set!(set!(), ), )
+        >
+    );
+    set_assert_eq!(sect_divergent,
+        set!(set!(), set!(set!(), ), ),
+        Intersection<
+            set!(set!(), Tuple<set!(), set!()>, set!(set!(), ), set!(), set!(set!(), ), ),
+            set!(set!(), set!(set!(), ), Tuple<set!(), set!(set!(), )>, )
         >
     );
 

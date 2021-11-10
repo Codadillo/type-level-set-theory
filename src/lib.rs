@@ -166,6 +166,43 @@ where
     type Output = Union<ConsUnion<E2, ConsUnion<E1, S1>>, S2>;
 }
 
+pub type Intersection<S1, S2> = <S1 as DIntersection<S2>>::Output;
+
+pub trait DIntersection<S: Set>: Set {
+    type Output: Set;
+}
+
+impl<E: Set, S: Set> DIntersection<Null> for ConsUnion<E, S> {
+    type Output = Null;
+}
+
+impl<E: Set, S: Set> DIntersection<ConsUnion<E, S>> for Null {
+    type Output = Null;
+}
+
+impl<E1, E2, S1, S2> DIntersection<ConsUnion<E1, S1>> for ConsUnion<E2, S2>
+where
+    E1: DIn<ConsUnion<E2, S2>>,
+    E2: Set,
+    S1: DIntersection<ConsUnion<E2, S2>>,
+    S2: Set,
+    In<E1, ConsUnion<E2, S2>>: DIfThenElse<
+        ConsUnion<E1, Intersection<S1, ConsUnion<E2, S2>>>,
+        Intersection<S1, ConsUnion<E2, S2>>,
+    >,
+    IfThenElse<
+        In<E1, ConsUnion<E2, S2>>,
+        ConsUnion<E1, Intersection<S1, ConsUnion<E2, S2>>>,
+        Intersection<S1, ConsUnion<E2, S2>>,
+    >: Set,
+{
+    type Output = IfThenElse<
+        In<E1, ConsUnion<E2, S2>>,
+        ConsUnion<E1, Intersection<S1, ConsUnion<E2, S2>>>,
+        Intersection<S1, ConsUnion<E2, S2>>,
+    >;
+}
+
 pub type Tuple<S1, S2> = ConsUnion<S1, ConsUnion<ConsUnion<S1, ConsUnion<S2>>>>;
 
 pub type Extend<S, X, Rev = False> = <S as DExtend<X, Rev>>::Output;
