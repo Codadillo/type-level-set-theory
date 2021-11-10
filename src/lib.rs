@@ -203,6 +203,27 @@ where
     >;
 }
 
+pub type Difference<A, B> = <A as DDifference<B>>::Output;
+
+pub trait DDifference<S: Set>: Set {
+    type Output: Set;
+}
+
+impl<S: Set> DDifference<S> for Null {
+    type Output = Null;
+}
+
+impl<E, S1, S2> DDifference<S2> for ConsUnion<E, S1>
+where
+    E: DIn<S2>,
+    S1: DDifference<S2>,
+    S2: Set,
+    In<E, S2>: DIfThenElse<Difference<S1, S2>, ConsUnion<E, Difference<S1, S2>>>,
+    IfThenElse<In<E, S2>, Difference<S1, S2>, ConsUnion<E, Difference<S1, S2>>>: Set,
+{
+    type Output = IfThenElse<In<E, S2>, Difference<S1, S2>, ConsUnion<E, Difference<S1, S2>>>;
+}
+
 pub type Tuple<S1, S2> = ConsUnion<S1, ConsUnion<ConsUnion<S1, ConsUnion<S2>>>>;
 
 pub type Extend<S, X, Rev = False> = <S as DExtend<X, Rev>>::Output;

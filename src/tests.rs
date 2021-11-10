@@ -107,6 +107,16 @@ pub mod set {
         >
     );
 
+    // Test difference
+    set_assert_eq!(diff_null, set!(set!(), set!(set!(), ), ), Difference<set!(set!(), set!(set!(), ), ), set!()>);
+    set_assert_eq!(diff_divergent, 
+        set!(Tuple<set!(), set!()>, set!(set!(set!(), ), ), ),
+        Difference<
+            set!(set!(), Tuple<set!(), set!()>, set!(set!(), ), set!(), set!(set!(set!(), ), ), ),
+            set!(set!(), set!(set!(), ), Tuple<set!(), set!(set!(), )>, )
+        >
+    );
+
     // Test tuple
     set_assert_eq!(tuple, set!(set!(), set!(set!(), set!(set!(), ), ), ), Tuple<set!(), set!(set!(), )>);
 
