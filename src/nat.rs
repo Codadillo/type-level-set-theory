@@ -64,3 +64,18 @@ where
     type Output =
         Cardinality<Union<Extend<N1, ConsUnion<Null>>, Extend<N2, ConsUnion<ConsUnion<Null>>>>>;
 }
+
+pub type Sub<N1, N2> = <N1 as DSub<N2>>::Output;
+
+pub trait DSub<N: Nat>: Nat {
+    type Output: Nat;
+}
+
+impl<N1, N2> DSub<N2> for N1
+where
+    N1: Nat + DDifference<N2>,
+    N2: Nat,
+    Difference<N1, N2>: DCardinality,
+{
+    type Output = Cardinality<Difference<N1, N2>>;
+}

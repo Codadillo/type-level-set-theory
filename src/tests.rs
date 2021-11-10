@@ -178,4 +178,9 @@ pub mod nat {
     set_assert_eq!(add_0_1, nat!(*), Add<nat!(*), nat!()>);
     set_assert_eq!(add_3_2, nat!(*****), Add<nat!(***), nat!(**)>);
     set_assert_eq!(add_4_10, nat!(**************), Add<nat!(****), nat!(**********)>);
+
+    // Test subtracting
+    set_assert_eq!(sub_0_big, nat!(), Sub<nat!(), nat!(*****)>);
+    set_assert_eq!(sub_3_2, nat!(*), Sub<nat!(***), nat!(**)>);
+    set_assert_eq!(sub_10_3, nat!(*******), Sub<nat!(**********), nat!(***)>);
 }
