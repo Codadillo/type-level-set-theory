@@ -15,15 +15,7 @@ pub trait Nat: Set {}
 impl Nat for Null {}
 impl<N: Set> Nat for ConsUnion<N, N> {}
 
-pub type Succ<N> = <N as DSucc>::Output;
-
-pub trait DSucc: Nat {
-    type Output: Nat;
-}
-
-impl<N: Nat> DSucc for N {
-    type Output = ConsUnion<N, N>;
-}
+pub type Succ<N> = ConsUnion<N, N>;
 
 pub type Cardinality<S> = <S as DCardinality>::Output;
 
@@ -51,7 +43,6 @@ impl<E, S> DCardinalityHelper for ConsUnion<E, S>
 where
     E: Set,
     S: DCardinalityHelper + DSimplify,
-    Cardinality<S>: DSucc,
     Simplify<S>: DCardinalityHelper,
 {
     type Output = Succ<Cardinality<S>>;
